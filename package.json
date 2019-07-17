@@ -1,13 +1,12 @@
 {
-  "name": "",
-  "version": "",
-  "description": "",
+  "name": "house-finder",
+  "version": "1.0.0",
+  "description": "Automatically find apartments instead of doing it manully everyday.",
   "scripts": {
     "start": "func host start",
-    "dev": "NODE_ENV=development node house-scraper/index.js",
     "test": "echo \"No tests yet...\""
   },
-  "author": "",
+  "author": "YIZHUANG",
   "dependencies": {
     "google-distance": "^1.0.1",
     "lodash": "^4.17.14",
@@ -15,5 +14,13 @@
   },
   "devDependencies": {
     "dotenv": "^8.0.0"
-  }
+  },
+  "repository": {
+    "type": "git"
+  },
+  "keywords": [
+    "JavaScript"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/YIZHUANG"
 }
