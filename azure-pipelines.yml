@@ -1,0 +1,13 @@
+stages:
+  - stage: DeployProd
+    dependsOn: []
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    jobs:
+      - job: DeployProd
+        steps:
+          - script: |
+              docker login -u $(dockerusername) -p $(dockerpassword) $(SERVER_URL)
+              docker build --tag $(IMAGE_URL):prod .
+              docker push $(IMAGE_URL):prod
+              ./release-notification.sh $(WEB_HOOK_URL) $(WEB_URL)
+            displayName: "Deploy production"
