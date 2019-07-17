@@ -42,7 +42,7 @@ async function getNextPage(page, currentUrl) {
   if (currentPage < lastPage - 1) {
     const nextPage = currentPage + 1;
     query.pagination = nextPage;
-    const nextUrl = `${currentUrl.split("?")[0]}?${qs.stringify(query)}`;
+    const nextUrl = `${currentUrl.split("?")[0]}?${qs.stringify(query)}`; // hack.
     return nextUrl;
   }
   return null;

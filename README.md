@@ -5,7 +5,9 @@
   </a>
 </p>
 
-> Automatically find apartments instead of doing it manully everyday. Tech: Azure function, Docker, Puppeteer.
+> A task scheduler runs every now and then to automatically find apartments instead of doing it manully everyday.
+I need this up and running quickly to put me out of my mystery.
+Tech: Azure function, Docker, Puppeteer.
 
 ### 🏠 [Homepage](https://github.com/YIZHUANG)
 
@@ -31,7 +33,7 @@ npm run test
 
 👤 **YIZHUANG**
 
-* Github: [@YIZHUANG](https://github.com/YIZHUANG)
+- Github: [@YIZHUANG](https://github.com/YIZHUANG)
 
 ## Show your support
 
