@@ -1,7 +1,6 @@
 stages:
   - stage: DeployProd
     dependsOn: []
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     jobs:
       - job: DeployProd
         steps:
