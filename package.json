@@ -4,17 +4,20 @@
   "description": "Automatically find apartments instead of doing it manully everyday.",
   "scripts": {
     "start": "func host start",
+    "dev": "node house-scraper/scrapWebsiteOne.js",
     "test": "echo \"No tests yet...\""
   },
   "author": "YIZHUANG",
   "dependencies": {
+    "axios": "^0.19.0",
     "google-distance": "^1.0.1",
     "lodash": "^4.17.14",
     "nodemailer": "^6.3.0",
     "puppeteer": "^1.18.1"
   },
   "devDependencies": {
-    "dotenv": "^8.0.0"
+    "dotenv": "^8.0.0",
+    "winston": "^3.2.1"
   },
   "repository": {
     "type": "git"

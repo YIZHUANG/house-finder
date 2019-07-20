@@ -12,8 +12,10 @@ const emailTemplate = houses => `
       return `
       <div class="card">
         <div class="container">
-          <a href='${house.link}'><b>${house.address}</b></a> 
+          <a href='${house.link}'><b>${house.address}</b></a>
+          <img src='${house.image}' alt='${house.address}' />
           <p>${house.price}</p>
+          <p>Distance: ${house.distance} km</p>
           </div>
       </div>
       `;

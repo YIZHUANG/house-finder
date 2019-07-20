@@ -1,9 +1,19 @@
+if (process.env.IN_SERVER_LESS !== "true") {
+  const path = require("path");
+  const winston = require('winston');
+  require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+  global.log = winston.info;
+}
+
 const qs = require("querystring");
+const puppeteer = require("puppeteer");
+
+const filterPlacesByDistance = require("../utils/binmapDistance");
 const checkDistance = require("../utils/checkDistance");
 
+const { website_1_url, base_location, website_1_result_class } = process.env;
 const config = process.env;
-const { base_location, website_1_result_class } = process.env;
-
+/*
 function buildSpecsForDistanceSearch(houses) {
   const origins = [];
   const destinations = [];
@@ -27,7 +37,7 @@ function getMatches(houses, distances) {
   });
   return matchs;
 }
-
+*/
 async function getNextPage(page, currentUrl) {
   const lastPage = await page.evaluate(config => {
     const { website_1_pagination_button_classname } = config;
@@ -48,7 +58,7 @@ async function getNextPage(page, currentUrl) {
   return null;
 }
 
-async function scrapWebsiteOne(browser, url, results = [], log) {
+async function scrapWebsiteOneByPage(browser, url, results = []) {
   const page = await browser.newPage();
   log(`going to ${url}`);
   await page.goto(url);
@@ -60,6 +70,8 @@ async function scrapWebsiteOne(browser, url, results = [], log) {
       website_1_card_item_classname,
       website_1_address_classname,
       website_1_price_classname,
+      website_1_image_classname,
+      website_1_image_att,
     } = config;
     const cards = [...document.querySelectorAll(website_1_card_item_classname)];
     const data = [];
@@ -67,8 +79,12 @@ async function scrapWebsiteOne(browser, url, results = [], log) {
       const address = card.querySelector(website_1_address_classname)
         .textContent;
       const link = card.href;
+      const image = card.querySelector(website_1_image_classname).attributes[
+        website_1_image_att
+      ].value;
       const price = card.querySelector(website_1_price_classname).textContent;
       data.push({
+        image,
         address,
         link,
         price,
@@ -77,16 +93,36 @@ async function scrapWebsiteOne(browser, url, results = [], log) {
     return data;
   }, config);
   log(`Got ${houses.length} of houses`);
+
+  /*
   const { origins, destinations } = buildSpecsForDistanceSearch(houses);
   const distances = await checkDistance(origins, destinations);
   const matchs = getMatches(houses, distances);
+  */
+  const matchs = await filterPlacesByDistance(houses);
   log(`Got ${matchs.length} of houses after filtering`);
   const newResults = [...results, ...matchs];
   const nextPageUrl = await getNextPage(page, url);
   if (nextPageUrl) {
-    return scrapWebsiteOne(browser, nextPageUrl, newResults, log);
+    return scrapWebsiteOneByPage(browser, nextPageUrl, newResults);
   }
   await browser.close();
   return newResults;
+}
+
+async function scrapWebsiteOne() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  const websiteOneData = await scrapWebsiteOneByPage(
+    browser,
+    website_1_url,
+    []
+  );
+  return websiteOneData;
+}
+if (process.env.IN_SERVER_LESS !== "true") {
+  scrapWebsiteOne();
 }
 module.exports = scrapWebsiteOne;
