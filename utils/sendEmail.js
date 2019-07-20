@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-
+const sortBy = require("lodash/sortBy");
 const emailTemplate = houses => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,12 +8,15 @@ const emailTemplate = houses => `
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body itemscope itemtype="http://schema.org/EmailMessage">
-    ${houses.map(house => {
+    ${sortBy(houses, ["distance"]).map(house => {
       return `
       <div class="card">
         <div class="container">
-          <a href='${house.link}'><b>${house.address}</b></a> 
+          <a href='${house.link}'><b>${house.address}</b></a>
+          <img src='${house.image}' alt='${house.address}' />
           <p>${house.price}</p>
+          <p>travelDuration: ${house.travelDuration}</p>
+          <p>Distance: ${house.distance} km</p>
           </div>
       </div>
       `;

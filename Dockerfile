@@ -18,5 +18,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot
 WORKDIR /home/site/wwwroot
+COPY ./package*.json ./
+RUN npm ci
 RUN npm i puppeteer
 COPY . /home/site/wwwroot
