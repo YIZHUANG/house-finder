@@ -4,7 +4,6 @@ const get = require("lodash/get");
 const apiKey = process.env.bin_map_api_key;
 const base_city = process.env.base_city; // for better match.
 const base_location = process.env.base_location;
-
 async function getDistanceSpecs(address) {
   const url = `http://dev.virtualearth.net/REST/V1/Routes/Transit?wp.0=${address},${base_city}&wp.1=${base_location},${base_city}&timeType=Departure&dateTime=5:00:00PM&key=${apiKey}`;
   const res = await axios.get(encodeURI(url));

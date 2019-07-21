@@ -4,7 +4,8 @@
   "description": "Automatically find apartments instead of doing it manully everyday.",
   "scripts": {
     "start": "func host start house-scraper-http --port 7071",
-    "dev": "node house-scraper-timer/scrapWebsiteOne.js",
+    "dev:websiteone": "node house-scraper-timer/scrapWebsiteOne.js",
+    "dev:websitetwo": "node house-scraper-timer/scrapWebsiteTwo.js",
     "test": "echo \"No tests yet...\""
   },
   "author": "YIZHUANG",

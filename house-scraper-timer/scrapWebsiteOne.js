@@ -73,14 +73,15 @@ async function scrapWebsiteOneByPage(browser, url, results = []) {
       website_1_image_classname,
       website_1_image_att,
       website_1_area_classname,
-      unwanted_areas
+      website_1_size_classname,
+      unwanted_areas,
     } = config;
     function isUnwanted(area) {
-      unwanted_areas.split(',').some(unwantedArea => {
-        const pattern = new RegExp('(^|\\W)' + unwantedArea + '($|\\W)', 'gi');
+      unwanted_areas.split(",").some(unwantedArea => {
+        const pattern = new RegExp("(^|\\W)" + unwantedArea + "($|\\W)", "gi");
         const found = area.match(pattern);
         return Array.isArray(found) && found.length > 0;
-      })
+      });
     }
     const cards = [...document.querySelectorAll(website_1_card_item_classname)];
     const data = [];
@@ -94,14 +95,16 @@ async function scrapWebsiteOneByPage(browser, url, results = []) {
       const area = card
         .querySelector(website_1_area_classname)
         .textContent.trim();
+      const size = card.querySelector(website_1_size_classname).textContent;
       const price = card.querySelector(website_1_price_classname).textContent;
-      if(!isUnwanted(area)) {
+      if (!isUnwanted(area)) {
         data.push({
           image,
           address,
           link,
           price,
           area,
+          size
         });
       }
     }

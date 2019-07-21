@@ -15,6 +15,7 @@ const emailTemplate = houses => `
           <a href='${house.link}'><b>${house.address}</b></a>
           <img src='${house.image}' alt='${house.address}' />
           <p>${house.price}</p>
+          <p>size: ${house.size}</p>
           <p>travelDuration: ${house.travelDuration}</p>
           <p>Distance: ${house.distance} km</p>
           </div>
