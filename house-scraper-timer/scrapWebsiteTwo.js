@@ -8,12 +8,8 @@ const qs = require("querystring");
 const puppeteer = require("puppeteer");
 const filterPlacesByDistance = require("../utils/binmapDistance");
 const removeDuplicates = require("../utils/removeDuplicates");
-const getNumberFromStr = require("../utils/getNumberFromStr");
 
-const {
-  website_2_url,
-  website_2_pagination_name,
-} = process.env;
+const { website_2_url, website_2_pagination_name } = process.env;
 const config = process.env;
 
 async function getNextPage(page, currentUrl) {
@@ -55,8 +51,14 @@ async function scrapWebsiteTwoByPage(
       website_2_size_classname,
       base_city,
     } = config;
+    /*
+    Not making them reusable because this function is ran at browser env.
+    Whatever reusuable stuff we have in Node env won't work in here.
+    Unless we do: await page.exposeFunction(reusableStuff, (...args) => doStuff(...args));
+    Which is not worth the effort.
+    */
     function isUnwanted(area) {
-      unwanted_areas.split(",").some(unwantedArea => {
+      return unwanted_areas.split(",").some(unwantedArea => {
         const pattern = new RegExp("(^|\\W)" + unwantedArea + "($|\\W)", "gi");
         const found = area.match(pattern);
         return Array.isArray(found) && found.length > 0;
@@ -71,12 +73,14 @@ async function scrapWebsiteTwoByPage(
       const link = card.href;
       const imageElement = card.querySelector(website_2_image_classname);
       const imageUrl = imageElement && imageElement.src;
-      const price = getNumberFromStr(
-        card.querySelector(website_2_price_classname).textContent
-      );
-      const size = getNumberFromStr(
-        card.querySelector(website_2_size_classname).textContent
-      );
+      const price = card
+        .querySelector(website_2_price_classname)
+        .textContent.replace(/\s/g, "")
+        .match(/\d+/)[0];
+      const size = card
+        .querySelector(website_2_size_classname)
+        .textContent.replace(/\s/g, "")
+        .match(/\d+/)[0];
       if (!isUnwanted(address)) {
         data.push({
           image: imageUrl,

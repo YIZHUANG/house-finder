@@ -76,8 +76,14 @@ async function scrapWebsiteOneByPage(browser, url, results = []) {
       website_1_size_classname,
       unwanted_areas,
     } = config;
+    /*
+    Not making them reusable because this function is ran at browser env.
+    Whatever reusuable stuff we have in Node env won't work in here.
+    Unless we do: await page.exposeFunction(reusableStuff, (...args) => doStuff(...args));
+    Which is not worth the effort.
+    */
     function isUnwanted(area) {
-      unwanted_areas.split(",").some(unwantedArea => {
+      return unwanted_areas.split(",").some(unwantedArea => {
         const pattern = new RegExp("(^|\\W)" + unwantedArea + "($|\\W)", "gi");
         const found = area.match(pattern);
         return Array.isArray(found) && found.length > 0;
