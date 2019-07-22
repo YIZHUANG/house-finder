@@ -36,7 +36,7 @@ async function scrapWebsiteTwoByPage(
   browser,
   url,
   results = [],
-  websiteOneData
+  exisitingData
 ) {
   const page = await browser.newPage();
   log(`going to ${url}`);
@@ -95,7 +95,7 @@ async function scrapWebsiteTwoByPage(
   }, config);
   log(`Got ${houses.length} of houses`);
   const matchs = await filterPlacesByDistance(
-    removeDuplicates(websiteOneData, houses)
+    removeDuplicates(exisitingData, houses)
   );
   log(`Got ${matchs.length} of houses after filtering`);
   const newResults = [...results, ...matchs];
@@ -105,14 +105,14 @@ async function scrapWebsiteTwoByPage(
       browser,
       nextPageUrl,
       newResults,
-      websiteOneData
+      exisitingData
     );
   }
   await browser.close();
   return newResults;
 }
 
-async function scrapWebsiteTwo(websiteOneData) {
+async function scrapWebsiteTwo(exisitingData) {
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -121,7 +121,7 @@ async function scrapWebsiteTwo(websiteOneData) {
     browser,
     website_2_url,
     [],
-    websiteOneData
+    exisitingData
   );
   return websiteTwoData;
 }

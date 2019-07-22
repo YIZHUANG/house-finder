@@ -10,6 +10,7 @@ const puppeteer = require("puppeteer");
 
 const filterPlacesByDistance = require("../utils/binmapDistance");
 const checkDistance = require("../utils/checkDistance");
+const removeDuplicates = require("../utils/removeDuplicates");
 
 const { website_1_url, base_location, website_1_result_class } = process.env;
 const config = process.env;
@@ -58,7 +59,12 @@ async function getNextPage(page, currentUrl) {
   return null;
 }
 
-async function scrapWebsiteOneByPage(browser, url, results = []) {
+async function scrapWebsiteOneByPage(
+  browser,
+  url,
+  results = [],
+  exisitingData
+) {
   const page = await browser.newPage();
   log(`going to ${url}`);
   await page.goto(url);
@@ -110,7 +116,7 @@ async function scrapWebsiteOneByPage(browser, url, results = []) {
           link,
           price,
           area,
-          size
+          size,
         });
       }
     }
@@ -123,18 +129,25 @@ async function scrapWebsiteOneByPage(browser, url, results = []) {
   const distances = await checkDistance(origins, destinations);
   const matchs = getMatches(houses, distances);
   */
-  const matchs = await filterPlacesByDistance(houses);
+  const matchs = await filterPlacesByDistance(
+    removeDuplicates(exisitingData, houses)
+  );
   log(`Got ${matchs.length} of houses after filtering`);
   const newResults = [...results, ...matchs];
   const nextPageUrl = await getNextPage(page, url);
   if (nextPageUrl) {
-    return scrapWebsiteOneByPage(browser, nextPageUrl, newResults);
+    return scrapWebsiteOneByPage(
+      browser,
+      nextPageUrl,
+      newResults,
+      exisitingData
+    );
   }
   await browser.close();
   return newResults;
 }
 
-async function scrapWebsiteOne() {
+async function scrapWebsiteOne(exisitingData) {
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -142,7 +155,8 @@ async function scrapWebsiteOne() {
   const websiteOneData = await scrapWebsiteOneByPage(
     browser,
     website_1_url,
-    []
+    [],
+    exisitingData
   );
   return websiteOneData;
 }
