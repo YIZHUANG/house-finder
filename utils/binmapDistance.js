@@ -11,7 +11,7 @@ async function getDistanceSpecs(address) {
 }
 function isClose(spec) {
   if (spec) {
-    return spec.travelDuration <= 1400;
+    return spec.travelDuration <= 1700;
   }
   return false;
 }
