@@ -1,5 +1,9 @@
 const nodemailer = require("nodemailer");
 const sortBy = require("lodash/sortBy");
+
+const base_city = process.env.base_city;
+const base_location = process.env.base_location;
+
 const emailTemplate = houses => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html xmlns="http://www.w3.org/1999/xhtml">
@@ -11,9 +15,16 @@ const emailTemplate = houses => `
     ${sortBy(houses, ["distance"]).map(house => {
       return `
       <div class="card">
-        <div class="container">
-          <a href='${house.link}'><b>${house.address}</b></a>
-          <img src='${house.image}' alt='${house.address}' />
+        <div>
+          <a style="display: block;" href='${house.link}'><b>${
+        house.address
+      }</b></a>
+          <a style="display: block;" href='https://www.google.com/maps/dir/${
+            house.address
+          },${base_city}/${base_location},${base_city}'>Open in goolge map</a>
+          <img style="display: block;" src='${house.image}' alt='${
+        house.address
+      }' />
           <p>${house.price}</p>
           <p>size: ${house.size}</p>
           <p>travelDuration: ${house.travelDuration}</p>

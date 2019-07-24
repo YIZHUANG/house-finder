@@ -13,7 +13,7 @@ project.lock.json
 config.js
 /packages
 /TestResults
-
+/config.json
 /tools/NuGet.exe
 /App_Data
 /secrets
